@@ -6,6 +6,9 @@ import ContactForm from "../components/contactForm";
 export default function Home() {
   return (
     <div className={styles.container}>
+      <Link href="/currentProjects">
+        <a>projects</a>
+      </Link>
       <ContactForm />
     </div>
   );
