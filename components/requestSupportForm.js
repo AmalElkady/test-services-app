@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers";
 import * as yup from "yup";
+import { useSelector, useDispatch } from "react-redux";
+
+import { SendRequestSupport } from "../redux/actions/supportActions";
 
 const schema = yup.object().shape({
   request: yup.string().required()
@@ -11,34 +14,28 @@ const RequestSupportForm = () => {
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema)
   });
+  const status = useSelector(state => state.support.returnStatus);
+  const Message = useSelector(state => state.support.returnMessage);
 
-  //result => catch the response of request
+  //result => hold the response of request
   const [result, setResult] = useState({ state: 0, message: "" });
 
-  const onSubmit = async data => {
-    try {
-      //For testing (customer ID  will get from logged user)
-      data.customer = "1";
-      console.log("data ", data);
-      const res = await fetch("./api/requestSupport", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          data
-        })
-      });
-      const re = await res.json();
-      if (res.status === 200) {
-        setResult({ state: 1, message: re.message });
-      } else {
-        setResult({ state: 2, message: re.message });
-      }
-    } catch (err) {
-      console.log("error ", err);
-      setResult({ state: 2, message: re.message });
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (status === 200) {
+      setResult({ state: 1, message: Message });
+    } else if (status === 404) {
+      setResult({ state: 2, message: Message });
+    } else {
+      setResult({ state: 0, message: "" });
     }
+  }, [status]);
+
+  const onSubmit = async data => {
+    //test for customer ID
+    data.customer = "1";
+    await dispatch(SendRequestSupport(data));
   };
 
   return (
