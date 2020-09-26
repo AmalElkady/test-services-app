@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers";
 import * as yup from "yup";
-//import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
+
+import { SendContactUsRequest } from "../redux/actions/contactActions";
 
 const schema = yup.object().shape({
   sender: yup.string().required(),
@@ -18,32 +20,24 @@ const ContactForm = () => {
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema)
   });
-
+  const status = useSelector(state => state.contact.returnStatus);
+  const Message = useSelector(state => state.contact.returnMessage);
   const [result, setResult] = useState({ state: 0, message: "" });
 
-  const onSubmit = async data => {
-    try {
-      const res = await fetch("./api/contact", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          data
-        })
-      });
-      const re = await res.json();
-      if (res.status === 200) {
-        setResult({ state: 1, message: re.message });
-        //toast.success(re.message);
-      } else {
-        setResult({ state: 2, message: re.message });
-        // toast.error("something wrong.");
-      }
-    } catch (err) {
-      console.log("error ", err);
-      setResult({ state: 2, message: re.message });
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (status === 200) {
+      setResult({ state: 1, message: Message });
+    } else if (status === 404) {
+      setResult({ state: 2, message: Message });
+    } else {
+      setResult({ state: 0, message: "" });
     }
+  }, [status]);
+
+  const onSubmit = async data => {
+    await dispatch(SendContactUsRequest(data));
   };
 
   return (
