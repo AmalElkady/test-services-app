@@ -9,13 +9,17 @@ const initialState = {
 const contactReducer = (state = initialState, action) => {
   switch (action.type) {
     //ADD REQUEST
-    case TYPES.ADD_CONTACT_REQUEST:
+    case TYPES.ADD_CONTACT_REQUEST_SUCCESS:
       return {
         ...state,
-        contactData: action.payload.data,
-        returnMessage: action.payload.message,
-        returnStatus: action.payload.status,
-        errors: null
+        contactData: action.payload,
+        returnMessage: action.message,
+        returnStatus: action.status
+      };
+    case TYPES.ADD_CONTACT_REQUEST_ERROR:
+      return {
+        ...state,
+        errors: action.payload
       };
     default:
       return { ...state };
