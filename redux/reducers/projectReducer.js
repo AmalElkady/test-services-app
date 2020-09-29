@@ -1,6 +1,8 @@
 import TYPES from "../types";
 const initialState = {
   projects: [],
+  currentPage: 0,
+  isLoading: false,
   errors: null
 };
 
@@ -10,14 +12,19 @@ const projectReducer = (state = initialState, action) => {
     case TYPES.GET_PROJECTS_SUCCESS:
       return {
         ...state,
-        projects: action.projects,
-        errors: null
+        isLoading: false,
+        projects: [...state.projects, ...action.payload]
       };
+    // return {
+    //   ...state,
+    //   projects: action.projects,
+    //   errors: null
+    // };
     case TYPES.GET_PROJECTS_ERROR:
       return {
         ...state,
-        projects: [],
-        errors: action.error
+        isLoading: false,
+        errors: action.payload
       };
     default:
       return { ...state };
