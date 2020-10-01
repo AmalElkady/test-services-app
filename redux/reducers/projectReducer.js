@@ -13,7 +13,8 @@ const projectReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        projects: [...state.projects, ...action.payload]
+        // projects: [...state.projects, ...action.payload]
+        projects: action.payload
       };
     // return {
     //   ...state,

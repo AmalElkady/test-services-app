@@ -19,8 +19,8 @@ import EditIcon from "@material-ui/icons/Edit";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    maxWidth: 500,
-    margin: "2rem auto"
+    maxWidth: "100%",
+    margin: "2rem"
   },
   media: {
     height: 0,
