@@ -1,6 +1,5 @@
 import { call, put, takeEvery, all } from "redux-saga/effects";
 import TYPES from "./types";
-import { appendErrors } from "react-hook-form";
 
 function* fetchProjectsData(action) {
   const { payload } = action;
